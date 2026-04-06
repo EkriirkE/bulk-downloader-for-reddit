@@ -1,8 +1,8 @@
 # Bulk Downloader for Reddit
 
 ## This fork has my custom commits in the development branch, master is untouched:
-- Compatible with the latest praw
-- `--stop-on-exist` switch to stop downloading when previoulsy downloaded files are encountered
+- [#1012](https://github.com/Serene-Arc/bulk-downloader-for-reddit/pull/1012) Compatible with the latest praw
+- [#975](https://github.com/Serene-Arc/bulk-downloader-for-reddit/pull/975) `--stop-on-exist` switch to stop downloading when previoulsy downloaded files are encountered
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg?logo=Python)](https://github.com/psf/black)
 
