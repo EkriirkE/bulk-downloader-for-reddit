@@ -130,6 +130,16 @@ class RedditConnector(metaclass=ABCMeta):
         self.args.disable_module = disabled_modules
         logger.debug(f"Disabling the following modules: {', '.join(self.args.disable_module)}")
 
+    def _wrap_reddit_get(self, *args, **kwargs):
+        for retry in range(3):
+            try:
+                return self._reddit_get(*args, **kwargs)
+            except prawcore.PrawcoreException as e:
+                logger.error(f"The request failed due to a PRAW exception: {e}")
+                logger.debug("Waiting 60 seconds to retry")
+                sleep(60)
+        return self._reddit_get(*args, **kwargs)
+
     def create_reddit_instance(self) -> None:
         if self.args.authenticate:
             logger.debug("Using authenticated Reddit instance")
@@ -181,6 +191,9 @@ class RedditConnector(metaclass=ABCMeta):
                 user_agent=self.user_agent,
                 ratelimit_seconds=120,
             )
+        # self.reddit_instance._authorized_core._requestor._http
+        self._reddit_get = self.reddit_instance.get
+        self.reddit_instance.get = self._wrap_reddit_get
 
     def retrieve_reddit_lists(self) -> list[praw.models.ListingGenerator]:
         master_list = []
